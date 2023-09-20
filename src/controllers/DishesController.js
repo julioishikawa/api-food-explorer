@@ -1,126 +1,75 @@
-const knex = require("../database/knex");
-const AppError = require("../utils/AppError");
+const DishesRepository = require("../repositories/DishesRepository");
+const DishesCreateService = require("../services/DishesCreateService");
+const DishesUpdateService = require("../services/DishesUpdateService");
+const DishesShowService = require("../services/DishesShowService");
+const DishesDeleteService = require("../services/DishesDeleteService");
+const DishesIndexService = require("../services/DishesIndexService");
 
 class DishesController {
   async create(req, res) {
     const { name, category, price, description, ingredients } = req.body;
 
-    const user_id = req.user.id;
+    const image = "default.jpg";
 
-    const nameInUse = await knex("dishes").where("name", name).first();
+    const dishesRepository = new DishesRepository();
+    const dishesCreateService = new DishesCreateService(dishesRepository);
 
-    if (nameInUse) {
-      throw new AppError("Um prato com esse nome já está cadastrado");
-    }
-
-    const [dish_id] = await knex("dishes").insert({
+    const dish_id = await dishesCreateService.execute({
+      image,
       name,
       category,
       price,
       description,
-      user_id,
+      ingredients,
     });
 
-    const ingredientsInsert = ingredients.map((name) => {
-      return {
-        dish_id,
-        name,
-        user_id,
-      };
+    return res.status(201).json({
+      message: "Prato criado com sucesso",
+      dish_id,
     });
-
-    await knex("ingredients").insert(ingredientsInsert);
-
-    return res.status(201).json({ id: dish_id });
   }
 
   async update(req, res) {
     const { name, category, price, description, ingredients } = req.body;
 
-    const { dish_id } = req.params;
+    const { id } = req.params;
 
-    const user_id = req.user.id;
+    const dishesRepository = new DishesRepository();
+    const dishesUpdateService = new DishesUpdateService(dishesRepository);
 
-    const dish = await knex("dishes").where("id", dish_id).first();
-    if (!dish) {
-      throw new AppError("Prato não encontrado");
-    }
-
-    const dishWithThisName = await knex("dishes").where("name", name).first();
-
-    if (dishWithThisName && Number(dish_id) !== dishWithThisName.id) {
-      throw new AppError("Um prato com esse nome já está cadastrado");
-    }
-
-    if (!name) {
-      name = dish.name;
-    }
-
-    if (!description) {
-      description = dish.description;
-    }
-
-    if (!price) {
-      price = dish.price;
-    }
-
-    if (!category) {
-      category = dish.category;
-    }
-
-    if (ingredients) {
-      await knex("ingredients").where("dish_id", dish.id).delete();
-    }
-
-    await knex("dishes").where("id", dish_id).update({
+    await dishesUpdateService.execute({
+      id,
       name,
-      description,
-      price,
       category,
+      price,
+      description,
+      ingredients,
     });
 
-    const ingredientsArray = ingredients.map((ingredient) => {
-      if (ingredient.name) {
-        return ingredient.name;
-      } else {
-        return ingredient;
-      }
+    return res.json({
+      message: "Prato atualizado com sucesso.",
+      id: +id,
     });
-
-    ingredientsArray.map(
-      async (ingredient) =>
-        await knex("ingredients").insert({
-          name: ingredient,
-          dish_id: dish.id,
-          user_id,
-        })
-    );
-
-    return res.json();
   }
 
   async show(req, res) {
     const { id } = req.params;
 
-    const dish = await knex("dishes").where({ id }).first();
-    const ingredients = await knex("ingredients")
-      .where({ dish_id: id })
-      .orderBy("name");
+    const dishesRepository = new DishesRepository();
+    const dishesShowService = new DishesShowService(dishesRepository);
 
-    if (!dish) {
-      throw new AppError("Prato não encontrado");
-    }
+    const dish = await dishesShowService.execute({ id });
 
-    return res.json({
-      ...dish,
-      ingredients,
-    });
+    return res.json(dish);
   }
 
   async delete(req, res) {
     const { id } = req.params;
 
-    await knex("dishes").where({ id }).delete();
+    const dishesRepository = new DishesRepository();
+    const dishesDeleteService = new DishesDeleteService(dishesRepository);
+
+    dishesDeleteService.execute({ id });
 
     return res.json();
   }
@@ -128,41 +77,12 @@ class DishesController {
   async index(req, res) {
     const { searchText } = req.query;
 
-    const dishes = await knex("dishes")
-      .whereLike("name", `%${name}%`)
-      .orderBy("name");
+    const dishesRepository = new DishesRepository();
+    const dishesIndexService = new DishesIndexService(dishesRepository);
 
-    const ingredients = await knex("ingredients")
-      .where({ name })
-      .innerJoin("dishes", "dishes.id", "ingredients.dish_id")
-      .orderBy("name");
+    const dishes = await dishesIndexService.execute(searchText);
 
-    let updatedDishes = [...dishes];
-
-    for (const ingredient of ingredients) {
-      const newDishes = {
-        image: ingredient.image,
-        name: ingredient.name,
-        price: ingredient.price,
-        description: ingredient.description,
-      };
-
-      updatedDishes.push(newDishes);
-    }
-
-    const userIngredients = await knex("ingredients");
-    const dishesWithIngredients = updatedDishes.map((dish) => {
-      const dishIngredients = userIngredients.filter(
-        (ingredient) => ingredient.dish_id === dish.id
-      );
-
-      return {
-        ...dish,
-        ingredients: dishIngredients,
-      };
-    });
-
-    return res.json(dishesWithIngredients);
+    return res.json(dishes);
   }
 }
 

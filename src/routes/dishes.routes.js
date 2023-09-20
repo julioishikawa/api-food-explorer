@@ -22,7 +22,7 @@ dishesRoutes.delete("/:id", dishesController.delete);
 dishesRoutes.patch(
   "/image/:id",
   upload.single("image"),
-  dishesImageController.create
+  dishesImageController.update
 );
 
 module.exports = dishesRoutes;

@@ -1,33 +1,19 @@
-const knex = require("../database/knex");
-const DiskStorage = require("../providers/DiskStorage");
-const AppError = require("../utils/AppError");
+const DishesRepository = require("../repositories/DishesRepository");
+const DishesImageUpdateService = require("../services/DishesImageUpdateService");
 
 class DishesImageController {
-  async create(req, res) {
-    const dish_id = req.params.id;
+  async update(req, res) {
+    const { id } = req.params;
+    const dishImage = req.file.filename;
 
-    const imageFile = req.file.filename;
+    const dishesRepository = new DishesRepository();
+    const dishesImageUpdateService = new DishesImageUpdateService(
+      dishesRepository
+    );
 
-    const diskStorage = new DiskStorage();
+    const dish = await dishesImageUpdateService.execute({ id, dishImage });
 
-    const dish = await knex("dishes").where({ id: dish_id }).first();
-
-    if (!dish) {
-      await diskStorage.verifyFile(imageFile);
-      throw new AppError("Insira um prato existente para inserir uma foto.");
-    }
-
-    if (dish.image) {
-      await diskStorage.deleteFile(dish.image);
-    }
-
-    const filename = await diskStorage.saveFile(imageFile);
-
-    dish.image = filename;
-
-    await knex("dishes").update(dish).where({ id: dish_id });
-
-    return res.status(201).json(dish);
+    return res.json(dish);
   }
 }
 
