@@ -1,4 +1,4 @@
-const knex = require("knex");
+const knex = require("../database/knex");
 
 class UsersRepository {
   async getUserByEmail(email) {
@@ -8,9 +8,9 @@ class UsersRepository {
   }
 
   async create({ name, email, password }) {
-    const user = await knex("users").where({ name, email, password });
+    const userCreated = await knex("users").insert({ name, email, password });
 
-    return user;
+    return userCreated;
   }
 }
 

@@ -8,6 +8,7 @@ const AppError = require("./utils/AppError");
 const uploadConfig = require("./configs/upload");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 

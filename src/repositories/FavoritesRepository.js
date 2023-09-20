@@ -1,4 +1,4 @@
-const knex = require("knex");
+const knex = require("../database/knex");
 
 class FavoritesRepository {
   async getFavoritesFromUser(user_id) {
