@@ -24,26 +24,28 @@ class DishesRepository {
     return dish;
   }
 
-  async getDishIngredients(dish_id) {
-    const ingredients = await knex("ingredients").where({ dish_id });
-
-    return ingredients;
-  }
-
   async getDishByName(name) {
     const [dish] = await knex("dishes").where({ name });
 
     return dish;
   }
 
+  async getDishIngredients(dish_id) {
+    const ingredients = await knex("ingredients").where({ dish_id });
+
+    return ingredients;
+  }
+
   async createDish({ image, name, category, price, description }) {
-    await knex("dishes").insert({
+    const [dishCreated] = await knex("dishes").insert({
       image,
       name,
       category,
       price,
       description,
     });
+
+    return dishCreated;
   }
 
   async createIngredients(ingredients) {

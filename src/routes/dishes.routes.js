@@ -13,17 +13,18 @@ const upload = multer(uploadConfig.MULTER);
 const dishesController = new DishesController();
 const dishesImageController = new DishesImageController();
 
-dishesRoutes.use(ensureAuthenticated, adminValidation);
+dishesRoutes.use(ensureAuthenticated);
 
-dishesRoutes.post("/", dishesController.create);
-dishesRoutes.put("/:id", dishesController.update);
+dishesRoutes.post("/", adminValidation, dishesController.create);
+dishesRoutes.put("/:id", adminValidation, dishesController.update);
 dishesRoutes.patch(
-  "/image/:id",
+  "/:id",
   upload.single("image"),
+  adminValidation,
   dishesImageController.update
 );
+dishesRoutes.delete("/:id", adminValidation, dishesController.delete);
 dishesRoutes.get("/", dishesController.index);
 dishesRoutes.get("/:id", dishesController.show);
-dishesRoutes.delete("/:id", dishesController.delete);
 
 module.exports = dishesRoutes;
