@@ -1,3 +1,5 @@
+const AppError = require("../utils/AppError");
+
 class DishesUpdateService {
   constructor(dishesRepository) {
     this.dishesRepository = dishesRepository;
