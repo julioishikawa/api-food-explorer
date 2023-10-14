@@ -5,7 +5,13 @@ class CreditCardsCreateService {
     this.creditCardsRepository = creditCardsRepository;
   }
 
-  async execute({ card_number, cardholder_name, expiration_date, cvc }) {
+  async execute({
+    card_number,
+    cardholder_name,
+    expiration_date,
+    cvc,
+    user_id,
+  }) {
     if (!card_number || !cardholder_name || !expiration_date || !cvc) {
       throw new AppError("Você precisa preencher todos os campos.", 400);
     }
@@ -16,6 +22,7 @@ class CreditCardsCreateService {
         cardholder_name,
         expiration_date,
         cvc,
+        user_id,
       }
     );
 

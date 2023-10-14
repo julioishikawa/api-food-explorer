@@ -8,6 +8,8 @@ class CreditCardsController {
   async create(req, res) {
     const { card_number, cardholder_name, expiration_date, cvc } = req.body;
 
+    const { id: user_id } = req.user;
+
     const creditCardsRepository = new CreditCardsRepository();
     const creditCardsCreateService = new CreditCardsCreateService(
       creditCardsRepository
@@ -18,6 +20,7 @@ class CreditCardsController {
       cardholder_name,
       expiration_date,
       cvc,
+      user_id,
     });
 
     return res.status(201).json({

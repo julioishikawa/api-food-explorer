@@ -21,12 +21,14 @@ class CreditCardsRepository {
     cardholder_name,
     expiration_date,
     cvc,
+    user_id,
   }) {
     const [credit_cards] = await knex("credit_cards").insert({
       card_number,
       cardholder_name,
       expiration_date,
       cvc,
+      user_id,
     });
 
     return credit_cards;
