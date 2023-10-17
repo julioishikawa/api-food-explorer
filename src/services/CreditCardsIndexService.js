@@ -7,11 +7,7 @@ class CreditCardsIndexService {
     const creditCards =
       await this.creditCardsRepository.getAllCreditCardsFromUser(user_id);
 
-    const formattedCreditCards = creditCards.map((creditCard) => ({
-      ...creditCard,
-    }));
-
-    return formattedCreditCards;
+    return creditCards;
   }
 }
 

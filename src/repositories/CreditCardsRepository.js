@@ -10,8 +10,18 @@ class CreditCardsRepository {
     return credit_cards;
   }
 
-  async getCreditCardById(id) {
-    const [credit_card] = await knex("credit_cards").where({ id });
+  async getCreditCardById(creditCardId) {
+    const [credit_card] = await knex("credit_cards").where({
+      id: creditCardId,
+    });
+
+    return credit_card;
+  }
+
+  async getCreditCardByNumber(card_number) {
+    const [credit_card] = await knex("credit_cards").where({
+      card_number,
+    });
 
     return credit_card;
   }

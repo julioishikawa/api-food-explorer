@@ -2,6 +2,7 @@ const CreditCardsRepository = require("../repositories/CreditCardsRepository");
 const CreditCardsCreateService = require("../services/CreditCardsCreateService");
 const CreditCardsUpdateService = require("../services/CreditCardsUpdateService");
 const CreditCardsIndexService = require("../services/CreditCardsIndexService");
+const CreditCardsShowService = require("../services/CreditCardsShowService");
 const CreditCardsDeleteService = require("../services/CreditCardsDeleteService");
 
 class CreditCardsController {
@@ -29,7 +30,7 @@ class CreditCardsController {
     });
   }
 
-  async update({ req, res }) {
+  async update(req, res) {
     const { card_number, cardholder_name, expiration_date, cvc } = req.body;
 
     const { id } = req.params;
@@ -64,6 +65,19 @@ class CreditCardsController {
     const creditCards = await creditCardsIndexService.execute({ user_id });
 
     return res.json(creditCards);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const creditCardsRepository = new CreditCardsRepository();
+    const creditCardsShowService = new CreditCardsShowService(
+      creditCardsRepository
+    );
+
+    const credit_card = await creditCardsShowService.execute({ id });
+
+    return res.json(credit_card);
   }
 
   async delete(req, res) {

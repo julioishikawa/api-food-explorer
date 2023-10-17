@@ -12,5 +12,6 @@ creditCardsRoutes.post("/", creditCardsController.create);
 creditCardsRoutes.put("/:id", creditCardsController.update);
 creditCardsRoutes.delete("/:id", creditCardsController.delete);
 creditCardsRoutes.get("/", creditCardsController.index);
+creditCardsRoutes.get("/:id", creditCardsController.show);
 
 module.exports = creditCardsRoutes;

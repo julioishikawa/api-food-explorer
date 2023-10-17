@@ -17,6 +17,16 @@ class CreditCardsUpdateService {
       throw new AppError("Cartão de crédito não encontrado.", 404);
     }
 
+    const creditCardAlreadyExists =
+      await this.creditCardsRepository.getCreditCardByNumber(card_number);
+
+    if (creditCardAlreadyExists) {
+      throw new AppError(
+        "Esse número de cartão de crédito já existe na sua conta. Exclua para adicionar novamente ou atualize para outro cartão de crédito.",
+        401
+      );
+    }
+
     const updatedCreditCard = Object.assign(creditCardToUpdate, {
       card_number,
       cardholder_name,
