@@ -88,7 +88,7 @@ class CreditCardsController {
       creditCardsRepository
     );
 
-    creditCardsDeleteService.execute({ id });
+    await creditCardsDeleteService.execute({ id });
 
     return res.json();
   }

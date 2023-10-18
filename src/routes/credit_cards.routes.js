@@ -10,8 +10,8 @@ creditCardsRoutes.use(ensureAuthenticated);
 
 creditCardsRoutes.post("/", creditCardsController.create);
 creditCardsRoutes.put("/:id", creditCardsController.update);
-creditCardsRoutes.delete("/:id", creditCardsController.delete);
 creditCardsRoutes.get("/", creditCardsController.index);
 creditCardsRoutes.get("/:id", creditCardsController.show);
+creditCardsRoutes.delete("/:id", creditCardsController.delete);
 
 module.exports = creditCardsRoutes;
