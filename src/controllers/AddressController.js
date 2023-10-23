@@ -23,13 +23,16 @@ class AddressController {
       user_id,
     });
 
-    return res.status(201).json(address_id);
+    return res.status(201).json({
+      message: "Endereço criado com sucesso.",
+      address_id,
+    });
   }
 
   async update(req, res) {
-    const { name, neighborhood, street, number, complement } = req.body;
-
     const { id } = req.params;
+    const { id: user_id } = req.user;
+    const { name, neighborhood, street, number, complement } = req.body;
 
     const addressRepository = new AddressRepository();
     const addressUpdateService = new AddressUpdateService(addressRepository);
@@ -41,9 +44,13 @@ class AddressController {
       street,
       number,
       complement,
+      user_id,
     });
 
-    return res.status(201).json(address_id);
+    return res.status(201).json({
+      message: "Endereço atualizado com sucesso",
+      address_id,
+    });
   }
 
   async index(req, res) {
@@ -65,9 +72,7 @@ class AddressController {
     const addressRepository = new AddressRepository();
     const addressShowService = new AddressShowService(addressRepository);
 
-    const address = await addressShowService.execute({
-      id,
-    });
+    const address = await addressShowService.execute({ id });
 
     return res.json(address);
   }

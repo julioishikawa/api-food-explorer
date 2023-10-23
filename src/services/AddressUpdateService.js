@@ -5,8 +5,16 @@ class AddressUpdateService {
     this.addressRepository = addressRepository;
   }
 
-  async execute({ id, name, neighborhood, street, number, complement }) {
-    if (!name || !neighborhood || !street || !number || !complement) {
+  async execute({
+    id,
+    name,
+    neighborhood,
+    street,
+    number,
+    complement,
+    user_id,
+  }) {
+    if (!name || !neighborhood || !street || !number) {
       throw new AppError("Preencha todos os campos.", 400);
     }
 
@@ -17,7 +25,7 @@ class AddressUpdateService {
     }
 
     const addressAlreadyExists =
-      await this.addressRepository.getAddressByStreetName(street);
+      await this.addressRepository.getAddressByHouseNumber(number, user_id);
 
     if (addressAlreadyExists) {
       throw new AppError(

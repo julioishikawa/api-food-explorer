@@ -5,7 +5,7 @@ exports.up = (knex) =>
     table.string("neighborhood").notNullable();
     table.string("street").notNullable();
     table.integer("number").notNullable();
-    table.string("complement").notNullable();
+    table.string("complement");
 
     table.integer("user_id").references("id").inTable("users");
   });

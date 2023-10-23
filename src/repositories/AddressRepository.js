@@ -3,21 +3,23 @@ const knex = require("../database/knex");
 class AddressRepository {
   async getAllAddressesFromUser(user_id) {
     const addresses = await knex("address")
-      .innerJoin("users", "users.id", "address.user_id")
       .where({ user_id })
       .select("address.*");
 
     return addresses;
   }
 
-  async getAddressById(id) {
-    const [address] = await knex("address").where({ id });
+  async getAddressById(addressId) {
+    const [address] = await knex("address").where({ id: addressId });
 
     return address;
   }
 
-  async getAddressByStreetName(street) {
-    const [address] = await knex("address").where({ street });
+  async getAddressByHouseNumber(number, user_id) {
+    const [address] = await knex("address").where({
+      number,
+      user_id,
+    });
 
     return address;
   }

@@ -5,7 +5,14 @@ class CreditCardsUpdateService {
     this.creditCardsRepository = creditCardsRepository;
   }
 
-  async execute({ id, card_number, cardholder_name, expiration_date, cvc }) {
+  async execute({
+    id,
+    card_number,
+    cardholder_name,
+    expiration_date,
+    cvc,
+    user_id,
+  }) {
     if (!card_number || !cardholder_name || !expiration_date || !cvc) {
       throw new AppError("Você precisa preencher todos os campos.", 400);
     }
@@ -18,7 +25,10 @@ class CreditCardsUpdateService {
     }
 
     const creditCardAlreadyExists =
-      await this.creditCardsRepository.getCreditCardByNumber(card_number);
+      await this.creditCardsRepository.getCreditCardByNumber(
+        card_number,
+        user_id
+      );
 
     if (creditCardAlreadyExists) {
       throw new AppError(

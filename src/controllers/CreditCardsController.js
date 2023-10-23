@@ -31,9 +31,9 @@ class CreditCardsController {
   }
 
   async update(req, res) {
-    const { card_number, cardholder_name, expiration_date, cvc } = req.body;
-
     const { id } = req.params;
+    const { id: user_id } = req.user;
+    const { card_number, cardholder_name, expiration_date, cvc } = req.body;
 
     const creditCardsRepository = new CreditCardsRepository();
     const creditCardsUpdateService = new CreditCardsUpdateService(
@@ -46,6 +46,7 @@ class CreditCardsController {
       cardholder_name,
       expiration_date,
       cvc,
+      user_id,
     });
 
     return res.status(201).json({

@@ -10,8 +10,12 @@ class AddressCreateService {
       throw new AppError("Preencha todos os campos.", 400);
     }
 
-    const addressAlreadyExists =
-      await this.addressRepository.getAddressByStreetName(street);
+    const addressAlreadyExists = await this.addressRepository.getAddressInfos(
+      neighborhood,
+      street,
+      number,
+      user_id
+    );
 
     if (addressAlreadyExists) {
       throw new AppError("Esse endereço já está cadastrado na sua conta.", 401);

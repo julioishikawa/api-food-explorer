@@ -18,8 +18,9 @@ class CreditCardsRepository {
     return credit_card;
   }
 
-  async getCreditCardByNumber(card_number) {
+  async getCreditCardByNumber(card_number, user_id) {
     const [credit_card] = await knex("credit_cards").where({
+      user_id,
       card_number,
     });
 

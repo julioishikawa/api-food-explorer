@@ -17,7 +17,10 @@ class CreditCardsCreateService {
     }
 
     const creditCardAlreadyExists =
-      await this.creditCardsRepository.getCreditCardByNumber(card_number);
+      await this.creditCardsRepository.getCreditCardByNumber(
+        card_number,
+        user_id
+      );
 
     if (creditCardAlreadyExists) {
       throw new AppError(
@@ -32,7 +35,6 @@ class CreditCardsCreateService {
         cardholder_name,
         expiration_date,
         cvc,
-        user_id,
       }
     );
 
