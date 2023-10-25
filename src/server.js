@@ -1,8 +1,8 @@
 require("express-async-errors");
 require("dotenv/config");
 
-const express = require("express");
 const cors = require("cors");
+const express = require("express");
 
 const routes = require("./routes");
 const database = require("./database/sqlite");
