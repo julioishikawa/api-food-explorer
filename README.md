@@ -1,6 +1,6 @@
 # API Food Explorer
 
-Todas as funções da aplicação [Food Explorer](https://github.com/shuharib0t/food-explorer) está nesse repositório.
+Todas as funções da aplicação [Food Explorer](https://github.com/julioishikawa/food-explorer) está nesse repositório.
 
 ## Tecnologias(libs) usadas ⚡️
 
